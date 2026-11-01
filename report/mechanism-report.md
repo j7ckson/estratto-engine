@@ -512,13 +512,10 @@ On the public example questions published by dbt (11) and Neo4j (3), Estratto St
 
 This report reflects work in progress. Next:
 
-- Release the application source and the first public release.
-- Publish the benchmark questions (B6 and the English sets) and the grader.
-- Extend reuse to rephrased questions and new parameters (a different month, store or product).
-- Reduce billable tokens through better prompt caching.
-- Add UI controls for cancellation and for confirming or revoking definitions.
-- Compare against frontier general-purpose agents on the same questions.
-- Build a new held-out set (B7) for the next round.
+-  Publish the application source and the first release
+-  Keep improving reuse and accuracy on new questions
+-  Make better use of provider-side prompt caching to cut expensive tokens further
+-  Extend the Studio Lab from cards to whole custom pages, generated within the Studio design system
 
 ## Appendix
 

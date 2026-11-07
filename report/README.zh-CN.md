@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/images/cover-readme-zh.jpg" alt="j7ckson / Estratto Studio 机制技术报告 README" width="100%"></p>
+<p align="center"><img src="../docs/images/cover-readme-zh.jpg" alt="j7ckson / Estratto Studio 机制技术报告 README" width="100%"></p>
 
 <p align="center"><a href="README.md">English</a> · <b>简体中文</b></p>
 
@@ -11,7 +11,7 @@
 <a href="#工作原理">工作原理</a> ·        
 <a href="#和同类产品比">同类对比</a> ·        
 <a href="#成绩">成绩</a> ·        
-<a href="report/mechanism-report.zh-CN.md">完整报告</a> ·        
+<a href="mechanism-report.zh-CN.md">完整报告</a> ·        
 <a href="#接下来">接下来</a>        
 </p>
 
@@ -56,7 +56,7 @@ Estratto Studio 是一个装在用户自己电脑上的数据管理与分析软�
 
 每题最多调用模型 4 次，每次都只看表结构。
 
-<p align="center"><img src="docs/images/zh/flow.png" alt="一个问题怎么走" width="88%"></p>
+<p align="center"><img src="../docs/images/zh/flow.png" alt="一个问题怎么走" width="88%"></p>
 
 ## 和同类产品比
 
@@ -90,7 +90,7 @@ Estratto Studio 是一个装在用户自己电脑上的数据管理与分析软�
 - **168 道开发时没见过的新题**（B5、B6 各 84 道，每个系统只跑一次），答对 90.5%（152/168），是 Text-to-SQL Agent（70/168）的约 2.2 倍；
 - **841 道旧题回归**，答对 98.7%（830/841），原来答对的题一题没丢。
 
-<p align="center"><img src="docs/images/zh/acc-all.png" alt="1,009 道题的准确率" width="80%"></p>
+<p align="center"><img src="../docs/images/zh/acc-all.png" alt="1,009 道题的准确率" width="80%"></p>
 
 下表是其中 B6 那 84 道新题的明细：
 
@@ -112,9 +112,9 @@ Estratto Studio 是一个装在用户自己电脑上的数据管理与分析软�
   - 算数的程序连不上网，联网的程序读不到你的数据，都由操作系统沙盒强制。
 - **表再大，花费也不涨**：因为不发数据行。
 
-<p align="center"><img src="docs/images/zh/cost.png" alt="花费对比" width="80%"></p>
+<p align="center"><img src="../docs/images/zh/cost.png" alt="花费对比" width="80%"></p>
 
-对照组拿到的表结构、指标算法和 4 次调用上限都和 Estratto Studio 一样。评测方法、每套数据的成绩和每一个机制，见[完整报告](report/mechanism-report.zh-CN.md)。
+对照组拿到的表结构、指标算法和 4 次调用上限都和 Estratto Studio 一样。评测方法、每套数据的成绩和每一个机制，见[完整报告](mechanism-report.zh-CN.md)。
 
 ## 里面有什么
 
@@ -139,20 +139,20 @@ Estratto Studio 还在持续开发，这份报告也会跟着更新。
 ## 仓库结构
 
 ```
-README.md               英文概览
-README.zh-CN.md         中文概览（本文件）
+report/README.md        英文概览
+report/README.zh-CN.md  中文概览（本文件）
 report/                 完整机制报告（中 / 英）
 docs/images/            图（en/、zh/）和封面
-LICENSE                 CC BY 4.0（报告、图、文档）
+report/LICENSE          CC BY 4.0（报告、图、文档）
 ```
 
 ## 许可
 
 Copyright (c) 2026 Jackson Wu (j7ckson)。
 
-本仓库中的报告、图和文档采用 [CC BY 4.0](LICENSE) 许可：可以转载和改编，商用也可以，但须署名，改动过的要注明。
+本仓库中的报告、图和文档采用 [CC BY 4.0](./LICENSE) 许可：可以转载和改编，商用也可以，但须署名，改动过的要注明。
 
-Estratto Studio 软件源码目前还不在本仓库。发布时将采用 GNU AGPLv3，并另外提供商业授权。
+问答引擎已作为 estratto-engine 以 Apache-2.0 许可发布在本仓库；Estratto Studio 桌面应用的许可将另行公布。
 
 ## 引用
 

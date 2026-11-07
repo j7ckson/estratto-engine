@@ -1,4 +1,4 @@
-<p align="center"><img src="docs/images/cover-readme-en.jpg" alt="j7ckson / Estratto Studio — Mechanism Report README" width="100%"></p>
+<p align="center"><img src="../docs/images/cover-readme-en.jpg" alt="j7ckson / Estratto Studio — Mechanism Report README" width="100%"></p>
 
 <p align="center"><b>English</b> · <a href="README.zh-CN.md">简体中文</a></p>
 
@@ -11,7 +11,7 @@
 <a href="#how-it-works">How it works</a> ·  
 <a href="#how-it-compares">How it compares</a> ·  
 <a href="#results">Results</a> ·  
-<a href="report/mechanism-report.md">Full report</a> ·  
+<a href="mechanism-report.md">Full report</a> ·  
 <a href="#roadmap">Roadmap</a>  
 </p>
 
@@ -56,7 +56,7 @@ The model understands; the local engine computes. Every question passes through 
 
 At most 4 model calls per question, all with schema only.
 
-<p align="center"><img src="docs/images/en/flow.png" alt="How one question flows" width="88%"></p>
+<p align="center"><img src="../docs/images/en/flow.png" alt="How one question flows" width="88%"></p>
 
 ## How it compares
 
@@ -90,7 +90,7 @@ We ran **1,009 questions** in total, all on the same model (DeepSeek v4.1 flash)
 - **168 held-out questions** the engine had never seen (84 each in B5 and B6; each system ran once): 90.5% correct (152/168), about 2.2× the text-to-SQL agent (70/168).
 - **841 regression questions**: 98.7% correct (830/841), with every previously correct question still correct.
 
-<p align="center"><img src="docs/images/en/acc-all.png" alt="Accuracy across 1,009 questions" width="80%"></p>
+<p align="center"><img src="../docs/images/en/acc-all.png" alt="Accuracy across 1,009 questions" width="80%"></p>
 
 The table below breaks down the 84 held-out questions in B6:
 
@@ -112,9 +112,9 @@ The table below breaks down the 84 held-out questions in B6:
   - The compute process cannot reach the network, and the network process cannot read your data; both are enforced by the OS sandbox.
 - **Cost doesn't grow with table size**, because data rows are never sent.
 
-<p align="center"><img src="docs/images/en/cost.png" alt="Cost comparison" width="80%"></p>
+<p align="center"><img src="../docs/images/en/cost.png" alt="Cost comparison" width="80%"></p>
 
-The text-to-SQL agent had the same schema, metric definitions and 4-call limit as Estratto Studio. Methodology, per-dataset results and every mechanism are covered in the [full report](report/mechanism-report.md).
+The text-to-SQL agent had the same schema, metric definitions and 4-call limit as Estratto Studio. Methodology, per-dataset results and every mechanism are covered in the [full report](mechanism-report.md).
 
 ## What's inside
 
@@ -139,20 +139,20 @@ Estratto Studio is under active development, and this report will be updated as 
 ## Repository layout
 
 ```
-README.md               this overview (English)
-README.zh-CN.md         overview (Chinese)
+report/README.md        this overview (English)
+report/README.zh-CN.md  overview (Chinese)
 report/                 full mechanism report (EN / ZH)
 docs/images/            figures (en/, zh/) and covers
-LICENSE                 CC BY 4.0 (report, figures, docs)
+report/LICENSE          CC BY 4.0 (report, figures, docs)
 ```
 
 ## License
 
 Copyright (c) 2026 Jackson Wu (j7ckson).
 
-The report, figures and documentation in this repository are licensed under [CC BY 4.0](LICENSE). You may share and adapt them, including for commercial use, as long as you give appropriate credit and indicate if changes were made.
+The report, figures and documentation in this repository are licensed under [CC BY 4.0](./LICENSE). You may share and adapt them, including for commercial use, as long as you give appropriate credit and indicate if changes were made.
 
-The Estratto Studio application source is not in this repository yet. When it is released, it will be published under the GNU AGPLv3, with a separate commercial licence available.
+The question-answering engine is published as estratto-engine under Apache-2.0 in this repository; the license of the Estratto Studio desktop app will be announced separately.
 
 ## Citation
 

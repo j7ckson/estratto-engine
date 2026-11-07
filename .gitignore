@@ -1,1 +1,8 @@
+node_modules/
+*.tgz
 .DS_Store
+*.log
+.estratto/
+tmp/
+.tmp/
+coverage/

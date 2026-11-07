@@ -1,0 +1,24 @@
+{
+  "id": "finance",
+  "name": "财务",
+  "datasets": {
+    "pl": { "match": ["损益", "财务", "利润", "pl"], "keys": ["日期"] }
+  },
+  "grain": {
+    "pl": ["日期"]
+  },
+  "metrics": [
+    { "id": "fin_revenue", "name": "收入", "desc": "收入金额（确认口径见 P03）", "kind": "simple", "dataset": "pl", "agg": "sum", "role": "收入", "match": ["收入", "revenue"], "additivity": "additive", "unit": "GBP", "decimals": 2 },
+    { "id": "fin_cost", "name": "成本", "desc": "成本金额（成本范围见 P04）", "kind": "simple", "dataset": "pl", "agg": "sum", "role": "成本", "match": ["成本", "cost"], "additivity": "additive", "unit": "GBP", "decimals": 2 },
+    { "id": "fin_opex", "name": "运营费用", "desc": "运营费用金额（费用归集见 P26）", "kind": "simple", "dataset": "pl", "agg": "sum", "role": "运营费用", "match": ["运营费用", "运营成本", "opex"], "additivity": "additive", "unit": "GBP", "decimals": 2 },
+    { "id": "fin_fees", "name": "平台费用", "desc": "平台费用金额（含税与否见 P26）", "kind": "simple", "dataset": "pl", "agg": "sum", "role": "平台费用", "match": ["平台费用", "费用", "fees"], "additivity": "additive", "unit": "GBP", "decimals": 2 },
+    { "id": "fin_gross_profit", "name": "毛利", "desc": "毛利 = 收入 − 成本（P04）", "kind": "derived", "expr": { "op": "sub", "args": ["fin_revenue", "fin_cost"] }, "additivity": "additive", "unit": "GBP", "decimals": 2 },
+    { "id": "fin_net_profit", "name": "净利", "desc": "净利 = 毛利 −（运营费用 + 平台费用）（是否含税见 P04）", "kind": "derived", "expr": { "op": "sub", "args": ["fin_gross_profit", { "op": "add", "args": ["fin_opex", "fin_fees"] }] }, "additivity": "additive", "unit": "GBP", "decimals": 2 },
+    { "id": "fin_gross_margin", "name": "毛利率", "desc": "毛利率 = 毛利 ÷ 收入 × 100（P04）", "kind": "ratio", "num": "fin_gross_profit", "den": "fin_revenue", "mul": 100, "additivity": "ratio", "unit": "%", "decimals": 1 },
+    { "id": "fin_net_margin", "name": "净利率", "desc": "净利率 = 净利 ÷ 收入 × 100（P04）", "kind": "ratio", "num": "fin_net_profit", "den": "fin_revenue", "mul": 100, "additivity": "ratio", "unit": "%", "decimals": 1 }
+  ],
+  "dims": [
+    { "id": "pl_month", "name": "月", "kind": "timeBucket", "dataset": "pl", "role": "日期", "match": ["日期", "date"], "grain": "month" }
+  ],
+  "relationships": []
+}

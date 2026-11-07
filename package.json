@@ -1,0 +1,64 @@
+{
+  "name": "estratto-engine",
+  "version": "1.0.0-rc.8",
+  "description": "Headless question-answering engine over DuckDB data: structured plan, local execution, verified numeric answers. Includes a workspace, a local HTTP service and an MCP server.",
+  "main": "index.js",
+  "module": "index.mjs",
+  "exports": {
+    ".": {
+      "import": "./index.mjs",
+      "require": "./index.js"
+    },
+    "./package.json": "./package.json",
+    "./examples/*": "./examples/*"
+  },
+  "bin": {
+    "estratto": "bin/estratto.js"
+  },
+  "license": "Apache-2.0",
+  "author": "Jackson Wu (j7ckson)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/j7ckson/estratto-engine.git"
+  },
+  "homepage": "https://github.com/j7ckson/estratto-engine#readme",
+  "bugs": {
+    "url": "https://github.com/j7ckson/estratto-engine/issues"
+  },
+  "engines": {
+    "node": ">=22.5"
+  },
+  "files": [
+    "index.js",
+    "index.mjs",
+    "src",
+    "core",
+    "bin",
+    "ui",
+    "docs/HTTP-API.md",
+    "scripts",
+    "examples",
+    "LICENSE",
+    "NOTICE",
+    "README.md",
+    "DECISIONS.md"
+  ],
+  "scripts": {
+    "test": "node --test --test-concurrency=1 \"test/*.test.js\""
+  },
+  "dependencies": {
+    "@duckdb/node-api": "^1.5.5-r.5",
+    "@js-temporal/polyfill": "0.5.1",
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "exceljs": "^4.4.0",
+    "mysql2": "^3.24.6",
+    "pg": "^8.23.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "overrides": {
+    "uuid": "^11.1.1"
+  }
+}

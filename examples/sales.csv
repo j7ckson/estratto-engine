@@ -1,0 +1,6 @@
+order_date,channel,sku,qty,amount
+2026-10-01,Amazon,A1,2,19.9
+2026-10-02,Shopify,A2,1,5.5
+2026-10-03,Amazon,A1,3,29.85
+2026-09-15,Amazon,A3,4,40
+2026-10-20,eBay,A2,5,100

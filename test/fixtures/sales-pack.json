@@ -1,0 +1,18 @@
+{
+ "id": "test_sales",
+ "name": "test sales rules",
+ "datasets": { "sales": { "match": ["sales"], "keys": ["sku"] } },
+ "grain": { "sales": ["sku"] },
+ "metrics": [
+  { "id": "gmv", "name": "销售额", "kind": "simple", "dataset": "sales", "agg": "sum", "field": "amount", "additivity": "additive", "unit": "元", "decimals": 2, "aliases": ["销售额", "GMV", "金额", "amount"], "auto": false, "confirmed": true },
+  { "id": "qty", "name": "销量", "kind": "simple", "dataset": "sales", "agg": "sum", "field": "qty", "additivity": "additive", "unit": "件", "decimals": 0, "aliases": ["销量", "件数", "qty"], "auto": false, "confirmed": true },
+  { "id": "orders", "name": "订单行数", "kind": "simple", "dataset": "sales", "agg": "count", "additivity": "additive", "unit": "", "decimals": 0, "aliases": ["订单行数", "记录数"], "auto": false, "confirmed": true }
+ ],
+ "dims": [
+  { "id": "sale_month", "name": "下单日期（按月）", "kind": "timeBucket", "dataset": "sales", "role": "sales.order_date", "match": ["order_date"], "grain": "month", "auto": false, "confirmed": true },
+  { "id": "channel", "name": "渠道", "kind": "column", "dataset": "sales", "role": "sales.channel", "match": ["channel"], "aliases": ["渠道", "channel"], "auto": false, "confirmed": true },
+  { "id": "sku", "name": "SKU", "kind": "column", "dataset": "sales", "role": "sales.sku", "match": ["sku"], "aliases": ["sku", "SKU"], "auto": false, "confirmed": true }
+ ],
+ "relationships": [],
+ "_meta": { "origin": "manual", "confirmed": true, "version": 1 }
+}

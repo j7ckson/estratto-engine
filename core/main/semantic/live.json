@@ -1,0 +1,27 @@
+{
+  "id": "live",
+  "name": "直播",
+  "datasets": {
+    "live_sessions": { "match": ["直播", "live"], "keys": ["场次ID", "session_id"] }
+  },
+  "grain": {
+    "live_sessions": ["场次ID"]
+  },
+  "metrics": [
+    { "id": "live_gmv", "name": "直播GMV", "desc": "直播场次带来的成交金额合计", "kind": "simple", "dataset": "live_sessions", "agg": "sum", "role": "GMV", "match": ["GMV", "直播GMV", "gmv"], "additivity": "additive", "unit": "GBP", "decimals": 2 },
+    { "id": "viewers", "name": "观看人次", "desc": "直播观看人次合计（人次，与去重观看人数区分，P22）", "kind": "simple", "dataset": "live_sessions", "agg": "sum", "role": "观看人次", "match": ["观看人次", "观看", "viewers"], "additivity": "additive", "decimals": 0 },
+    { "id": "live_orders", "name": "订单数", "desc": "直播场次带来的订单数合计", "kind": "simple", "dataset": "live_sessions", "agg": "sum", "role": "订单数", "match": ["订单数", "订单", "orders"], "additivity": "additive", "decimals": 0 },
+    { "id": "watch_time", "name": "观看时长", "desc": "直播观看时长合计（分钟）", "kind": "simple", "dataset": "live_sessions", "agg": "sum", "role": "观看时长", "match": ["观看时长", "观看时间", "watch_time"], "additivity": "additive", "unit": "分", "decimals": 0 },
+    { "id": "follows", "name": "涨粉", "desc": "直播带来的新增关注数", "kind": "simple", "dataset": "live_sessions", "agg": "sum", "role": "涨粉", "match": ["涨粉", "新增关注", "follows"], "additivity": "additive", "decimals": 0 },
+    { "id": "gift_value", "name": "礼物价值", "desc": "直播收到的礼物价值合计", "kind": "simple", "dataset": "live_sessions", "agg": "sum", "role": "礼物价值", "match": ["礼物价值", "打赏", "gift"], "additivity": "additive", "unit": "GBP", "decimals": 2 },
+    { "id": "avg_watch", "name": "人均观看", "desc": "人均观看时长 = 观看时长 ÷ 观看人次", "kind": "ratio", "num": "watch_time", "den": "viewers", "additivity": "ratio", "unit": "分", "decimals": 1 },
+    { "id": "conversion", "name": "转化率", "desc": "直播转化率 = 订单数 ÷ 观看人次 × 100（P12）", "kind": "ratio", "num": "live_orders", "den": "viewers", "mul": 100, "additivity": "ratio", "unit": "%", "decimals": 2 },
+    { "id": "live_aov", "name": "客单价", "desc": "直播客单价 = 直播 GMV ÷ 订单数（P11）", "kind": "ratio", "num": "live_gmv", "den": "live_orders", "additivity": "ratio", "unit": "GBP", "decimals": 2 }
+  ],
+  "dims": [
+    { "id": "host", "name": "主播", "kind": "column", "dataset": "live_sessions", "role": "主播", "match": ["主播", "host"] },
+    { "id": "live_date", "name": "日期", "kind": "column", "dataset": "live_sessions", "role": "日期", "match": ["日期", "date"] },
+    { "id": "session_status", "name": "状态", "kind": "map", "dataset": "live_sessions", "role": "状态", "match": ["状态", "status"], "mapping": { "0": "未开播", "1": "直播中", "2": "已结束" }, "default": "未知" }
+  ],
+  "relationships": []
+}

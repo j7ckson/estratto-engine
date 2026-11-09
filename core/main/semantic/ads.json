@@ -1,0 +1,33 @@
+{
+  "id": "ads",
+  "name": "广告",
+  "datasets": {
+    "ads": { "match": ["广告", "ad"], "keys": ["广告ID", "ad_id"] },
+    "orders": { "match": ["销售明细", "订单", "order", "sales"], "keys": ["订单号", "order_id"] }
+  },
+  "grain": {
+    "ads": ["广告ID"],
+    "orders": ["订单号"]
+  },
+  "metrics": [
+    { "id": "ad_spend", "name": "广告花费", "desc": "投放广告的花费金额；费用范围见 P26", "kind": "simple", "dataset": "ads", "agg": "sum", "role": "花费", "match": ["广告花费", "花费", "spend"], "additivity": "additive", "unit": "GBP", "decimals": 2 },
+    { "id": "clicks", "name": "点击", "desc": "广告被点击的次数", "kind": "simple", "dataset": "ads", "agg": "sum", "role": "点击", "match": ["点击", "clicks"], "additivity": "additive", "decimals": 0 },
+    { "id": "impressions", "name": "曝光", "desc": "广告被展示（曝光）的次数", "kind": "simple", "dataset": "ads", "agg": "sum", "role": "曝光", "match": ["曝光", "展示", "impressions"], "additivity": "additive", "decimals": 0 },
+    { "id": "ad_conversions", "name": "转化", "desc": "广告带来的转化次数（下单/注册等，按平台定义，P12/P14）", "kind": "simple", "dataset": "ads", "agg": "sum", "role": "转化", "match": ["转化", "转化数", "conversions"], "additivity": "additive", "decimals": 0 },
+    { "id": "ctr", "name": "点击率", "desc": "点击率 = 点击 ÷ 曝光 × 100", "kind": "ratio", "num": "clicks", "den": "impressions", "mul": 100, "additivity": "ratio", "unit": "%", "decimals": 2 },
+    { "id": "cpc", "name": "CPC", "desc": "单次点击成本 = 广告花费 ÷ 点击", "kind": "ratio", "num": "ad_spend", "den": "clicks", "additivity": "ratio", "unit": "GBP", "decimals": 2 },
+    { "id": "cvr", "name": "转化率", "desc": "广告转化率 = 转化数 ÷ 点击 × 100（P12）", "kind": "ratio", "num": "ad_conversions", "den": "clicks", "mul": 100, "additivity": "ratio", "unit": "%", "decimals": 2 },
+    { "id": "cpa", "name": "CPA", "desc": "单次转化成本 = 广告花费 ÷ 转化数（P14）", "kind": "ratio", "num": "ad_spend", "den": "ad_conversions", "additivity": "ratio", "unit": "GBP", "decimals": 2 },
+    { "id": "ad_gmv", "name": "广告GMV", "desc": "归因到广告的成交金额（归因窗口见 P13）", "kind": "simple", "dataset": "orders", "agg": "sum", "role": "销售金额", "match": ["销售额", "GMV", "amount"], "additivity": "additive", "unit": "GBP", "decimals": 2 },
+    { "id": "roas", "name": "ROAS", "desc": "广告支出回报 = 广告 GMV ÷ 广告花费", "kind": "ratio", "num": "ad_gmv", "den": "ad_spend", "additivity": "ratio", "decimals": 2 },
+    { "id": "acos", "name": "ACOS", "desc": "广告花费占广告 GMV 比例 = 广告花费 ÷ 广告 GMV × 100", "kind": "ratio", "num": "ad_spend", "den": "ad_gmv", "mul": 100, "additivity": "ratio", "unit": "%", "decimals": 1 }
+  ],
+  "dims": [
+    { "id": "platform", "name": "平台", "kind": "column", "dataset": "ads", "role": "平台", "match": ["平台", "渠道", "platform"] },
+    { "id": "campaign", "name": "活动", "kind": "column", "dataset": "ads", "role": "活动", "match": ["活动", "推广活动", "campaign"] },
+    { "id": "ad_week", "name": "周", "kind": "timeBucket", "dataset": "ads", "role": "日期", "match": ["日期", "date"], "grain": "week" }
+  ],
+  "relationships": [
+    { "id": "ads_orders", "left": "ads", "right": "orders", "keys": ["订单号", "order_id"], "cardinality": "N:N" }
+  ]
+}

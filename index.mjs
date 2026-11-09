@@ -1,0 +1,15 @@
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
+const cjs = require('./index.js');
+export const createEngine = cjs.createEngine;
+export const openaiCompatible = cjs.openaiCompatible;
+export const writeAttempt = cjs.writeAttempt;
+export const protect = cjs.protect;
+export const CODE_VERSION = cjs.CODE_VERSION;
+export const initWorkspace = cjs.initWorkspace;
+export const openWorkspace = cjs.openWorkspace;
+export const readConfig = cjs.readConfig;
+export const validateConfig = cjs.validateConfig;
+export const startServe = cjs.startServe;
+export const createMcpServer = cjs.createMcpServer;
+export default cjs;

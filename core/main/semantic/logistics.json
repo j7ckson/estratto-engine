@@ -1,0 +1,30 @@
+{
+  "id": "logistics",
+  "name": "国际货代",
+  "datasets": {
+    "shipment": { "match": ["物流", "运单", "shipment", "货代"], "keys": ["运单号", "shipment_id"] }
+  },
+  "grain": {
+    "shipment": ["运单号"]
+  },
+  "metrics": [
+    { "id": "shipment_count", "name": "票数", "desc": "运单票数（COUNT(*)）", "kind": "simple", "dataset": "shipment", "agg": "count", "additivity": "additive", "decimals": 0 },
+    { "id": "ship_revenue", "name": "运费收入", "desc": "运费收入金额", "kind": "simple", "dataset": "shipment", "agg": "sum", "role": "收入", "match": ["运费收入", "收入", "revenue"], "additivity": "additive", "unit": "USD", "decimals": 2 },
+    { "id": "ship_cost", "name": "渠道成本", "desc": "渠道成本金额", "kind": "simple", "dataset": "shipment", "agg": "sum", "role": "成本", "match": ["渠道成本", "成本", "cost"], "additivity": "additive", "unit": "USD", "decimals": 2 },
+    { "id": "ship_gross_profit", "name": "毛利", "desc": "毛利 = 运费收入 − 渠道成本（费用范围见 P02）", "kind": "derived", "expr": { "op": "sub", "args": ["ship_revenue", "ship_cost"] }, "additivity": "additive", "unit": "USD", "decimals": 2 },
+    { "id": "ship_margin", "name": "毛利率", "desc": "毛利率 = 毛利 ÷ 运费收入 × 100（P04）", "kind": "ratio", "num": "ship_gross_profit", "den": "ship_revenue", "mul": 100, "additivity": "ratio", "unit": "%", "decimals": 1 },
+    { "id": "chargeable_weight", "name": "计费重量", "desc": "计费重量合计（kg；实重/体积重见 P28）", "kind": "simple", "dataset": "shipment", "agg": "sum", "role": "计费重量", "match": ["计费重量", "计费重", "chargeable_weight"], "additivity": "additive", "unit": "kg", "decimals": 1 },
+    { "id": "cost_per_kg", "name": "每公斤成本", "desc": "每公斤成本 = 渠道成本 ÷ 计费重量（P28）", "kind": "ratio", "num": "ship_cost", "den": "chargeable_weight", "additivity": "ratio", "unit": "USD", "decimals": 2 },
+    { "id": "on_time_count", "name": "准时票数", "desc": "准时票数（准时基准见 P25）", "kind": "simple", "dataset": "shipment", "agg": "sum", "role": "准时", "match": ["准时", "准时票", "on_time"], "additivity": "additive", "decimals": 0 },
+    { "id": "on_time_rate", "name": "准时率", "desc": "准时率 = 准时票数 ÷ 票数 × 100（P25）", "kind": "ratio", "num": "on_time_count", "den": "shipment_count", "mul": 100, "additivity": "ratio", "unit": "%", "decimals": 1 },
+    { "id": "delay_count", "name": "延误票数", "desc": "延误票数", "kind": "simple", "dataset": "shipment", "agg": "sum", "role": "延误", "match": ["延误", "delay"], "additivity": "additive", "decimals": 0 },
+    { "id": "damage_count", "name": "破损票数", "desc": "破损票数", "kind": "simple", "dataset": "shipment", "agg": "sum", "role": "破损", "match": ["破损", "damage"], "additivity": "additive", "decimals": 0 }
+  ],
+  "dims": [
+    { "id": "carrier", "name": "渠道", "kind": "column", "dataset": "shipment", "role": "渠道", "match": ["渠道", "承运商", "carrier"] },
+    { "id": "service", "name": "产品", "kind": "map", "dataset": "shipment", "role": "产品", "match": ["产品", "服务", "service"], "mapping": { "P": "优先", "E": "经济", "IP": "国际优先" }, "default": "其他" },
+    { "id": "ship_status", "name": "状态", "kind": "map", "dataset": "shipment", "role": "状态", "match": ["状态", "status"], "mapping": { "1": "在途", "2": "已签收", "3": "异常" }, "default": "未知" },
+    { "id": "ship_month", "name": "月", "kind": "timeBucket", "dataset": "shipment", "role": "日期", "match": ["日期", "date"], "grain": "month" }
+  ],
+  "relationships": []
+}

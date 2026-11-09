@@ -1,0 +1,29 @@
+{
+  "id": "inventory",
+  "name": "库存与备货",
+  "datasets": {
+    "sku": { "match": ["库存", "商品", "sku", "inventory"], "keys": ["SKU", "sku"] }
+  },
+  "grain": {
+    "sku": ["SKU"]
+  },
+  "metrics": [
+    { "id": "stock_qty", "name": "期末库存量", "desc": "期末库存件数（SKU 快照，跨期不可加，P07）", "kind": "simple", "dataset": "sku", "agg": "sum", "role": "库存量", "match": ["库存量", "库存", "stock_qty", "stock"], "additivity": "semiAdditive", "decimals": 0 },
+    { "id": "stock_value", "name": "库存金额", "desc": "期末库存金额（成本价/售价口径见 P07）", "kind": "simple", "dataset": "sku", "agg": "sum", "role": "库存金额", "match": ["库存金额", "库存价值", "stock_value"], "additivity": "semiAdditive", "unit": "GBP", "decimals": 2 },
+    { "id": "daily_sales", "name": "日均销量", "desc": "日均销量（销量 ÷ 天数；自然日还是营业日见 P17）", "kind": "simple", "dataset": "sku", "agg": "sum", "role": "日均销量", "match": ["日均销量", "日均销售", "daily_sales"], "additivity": "additive", "decimals": 2 },
+    { "id": "days_of_supply", "name": "可售天数", "desc": "库存可售天数 = 期末库存 ÷ 日均销量（P17）", "kind": "ratio", "num": "stock_qty", "den": "daily_sales", "additivity": "ratio", "unit": "天", "decimals": 1 },
+    { "id": "sales_qty", "name": "周期销量", "desc": "统计期销量（件）", "kind": "simple", "dataset": "sku", "agg": "sum", "role": "销量", "match": ["销量", "销售数量", "sales_qty", "units"], "additivity": "additive", "decimals": 0 },
+    { "id": "sales_value", "name": "周期销售额", "desc": "统计期销售额", "kind": "simple", "dataset": "sku", "agg": "sum", "role": "销售额", "match": ["销售额", "销售金额", "sales_value"], "additivity": "additive", "unit": "GBP", "decimals": 2 },
+    { "id": "sell_through", "name": "售罄率", "desc": "售罄率 = 销量 ÷（销量 + 期末库存）× 100（另一口径见 P16）", "kind": "derived", "expr": { "op": "div", "args": ["sales_qty", { "op": "add", "args": ["stock_qty", "sales_qty"] }] }, "additivity": "ratio", "unit": "%", "decimals": 1 },
+    { "id": "turnover", "name": "库存周转", "desc": "库存周转 = 周期销售额 ÷ 期末库存金额（非财务口径，P18）", "kind": "derived", "expr": { "op": "div", "args": ["sales_value", "stock_value"] }, "additivity": "ratio", "decimals": 2 },
+    { "id": "age_180_qty", "name": "库龄≥180天数量", "desc": "库龄 ≥180 天的库存件数（阈值由包定义，P07）", "kind": "simple", "dataset": "sku", "agg": "sum", "role": "库龄180数量", "match": ["库龄180数量", "库龄≥180", "age_180", "deadstock"], "additivity": "semiAdditive", "decimals": 0 },
+    { "id": "deadstock_ratio", "name": "滞销占比", "desc": "滞销占比 = 库龄≥180 天数量 ÷ 期末库存 × 100（P07/P18）", "kind": "ratio", "num": "age_180_qty", "den": "stock_qty", "mul": 100, "additivity": "ratio", "unit": "%", "decimals": 1 },
+    { "id": "stockout_sku", "name": "断货SKU数", "desc": "断货 SKU 数（按断货标记求和，P07）", "kind": "simple", "dataset": "sku", "agg": "sum", "role": "断货标记", "match": ["断货标记", "断货", "stockout"], "additivity": "additive", "decimals": 0 },
+    { "id": "replenish_qty", "name": "建议补货量", "desc": "建议补货件数（按补货规则，P07）", "kind": "simple", "dataset": "sku", "agg": "sum", "role": "补货量", "match": ["补货量", "建议补货", "replenish"], "additivity": "additive", "decimals": 0 }
+  ],
+  "dims": [
+    { "id": "inv_category", "name": "品类", "kind": "column", "dataset": "sku", "role": "品类", "match": ["品类", "类目", "category"] },
+    { "id": "age_bucket", "name": "库龄分档", "kind": "bucket", "dataset": "sku", "role": "库龄天数", "match": ["库龄天数", "库龄", "age_days"], "edges": [30, 90, 180], "labels": ["新品", "在售", "预警", "滞销"] }
+  ],
+  "relationships": []
+}

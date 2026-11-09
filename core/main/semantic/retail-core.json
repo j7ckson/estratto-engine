@@ -1,0 +1,350 @@
+{
+  "id": "retail",
+  "name": "经营核心",
+  "datasets": {
+    "orders": {
+      "match": [
+        "销售明细",
+        "订单",
+        "order",
+        "sales"
+      ],
+      "keys": [
+        "订单号",
+        "order_id",
+        "order_no"
+      ]
+    },
+    "refunds": {
+      "match": [
+        "退款",
+        "refund"
+      ],
+      "keys": [
+        "退款单号",
+        "refund_id"
+      ]
+    },
+    "stores": {
+      "match": [
+        "店铺",
+        "store"
+      ],
+      "keys": [
+        "店铺ID",
+        "store_id"
+      ]
+    }
+  },
+  "grain": {
+    "orders": [
+      "订单号"
+    ],
+    "refunds": [
+      "退款单号"
+    ],
+    "stores": [
+      "店铺ID"
+    ]
+  },
+  "metrics": [
+    {
+      "id": "gmv",
+      "name": "销售额",
+      "desc": "统计期内下单的商品金额合计；含未付款/取消/退款与否见 P02",
+      "kind": "simple",
+      "dataset": "orders",
+      "agg": "sum",
+      "role": "销售金额",
+      "match": [
+        "销售额",
+        "GMV",
+        "营业额",
+        "销售金额",
+        "sales",
+        "amount"
+      ],
+      "additivity": "additive",
+      "unit": "GBP",
+      "decimals": 2,
+      "aliases": [
+        "GMV",
+        "成交额",
+        "营业额",
+        "销售金额"
+      ]
+    },
+    {
+      "id": "order_count",
+      "name": "订单数",
+      "desc": "统计期内的订单行数（COUNT(*)），不是去重订单号",
+      "kind": "simple",
+      "dataset": "orders",
+      "agg": "count",
+      "additivity": "additive",
+      "decimals": 0
+    },
+    {
+      "id": "cost",
+      "name": "成本",
+      "desc": "销售相关的成本金额；是否含运费/平台费/退款见 P04",
+      "kind": "simple",
+      "dataset": "orders",
+      "agg": "sum",
+      "role": "成本",
+      "match": [
+        "成本",
+        "COGS",
+        "cost"
+      ],
+      "additivity": "additive",
+      "unit": "GBP",
+      "decimals": 2
+    },
+    {
+      "id": "gross_margin",
+      "name": "毛利率",
+      "desc": "毛利占销售额比例 =（销售额 − 成本）÷ 销售额；成本范围见 P04",
+      "kind": "derived",
+      "expr": {
+        "op": "div",
+        "args": [
+          {
+            "op": "sub",
+            "args": [
+              "gmv",
+              "cost"
+            ]
+          },
+          "gmv"
+        ]
+      },
+      "additivity": "ratio",
+      "unit": "%",
+      "decimals": 1
+    },
+    {
+      "id": "refund_amount",
+      "name": "退款额",
+      "desc": "统计期内退款金额合计（按退款发生日归属，见 P24）",
+      "kind": "simple",
+      "dataset": "refunds",
+      "agg": "sum",
+      "role": "退款金额",
+      "match": [
+        "退款金额",
+        "退款额",
+        "refund_amount"
+      ],
+      "additivity": "additive",
+      "unit": "GBP",
+      "decimals": 2,
+      "aliases": [
+        "退款额",
+        "退款金额"
+      ]
+    },
+    {
+      "id": "refund_rate",
+      "name": "退款率",
+      "desc": "退款金额占销售额比例 = 退款金额 ÷ 销售额 × 100；与订单口径退货率区分（P05）",
+      "kind": "ratio",
+      "num": "refund_amount",
+      "den": "gmv",
+      "mul": 100,
+      "additivity": "ratio",
+      "unit": "%",
+      "decimals": 1,
+      "aliases": [
+        "退货率",
+        "金额退货率",
+        "退款率",
+        "退款占比"
+      ]
+    },
+    {
+      "id": "aov",
+      "name": "客单价",
+      "desc": "平均每单金额 = 销售额 ÷ 订单数；按人客单价另算（P11）",
+      "kind": "ratio",
+      "num": "gmv",
+      "den": "order_count",
+      "additivity": "ratio",
+      "unit": "GBP",
+      "decimals": 2
+    },
+    {
+      "id": "refund_order_count",
+      "name": "退款订单数",
+      "desc": "发生过退款的订单去重计数；口径见 P05/P23",
+      "kind": "simple",
+      "dataset": "refunds",
+      "agg": "dcount",
+      "role": "订单号",
+      "match": [
+        "订单号",
+        "order_id",
+        "退款订单号"
+      ],
+      "additivity": "distinct",
+      "unit": "单",
+      "decimals": 0,
+      "aliases": [
+        "退款订单数",
+        "退款单数"
+      ]
+    },
+    {
+      "id": "order_return_rate",
+      "name": "订单退货率",
+      "desc": "退款订单数占订单数比例 = 退款订单数 ÷ 订单数 × 100（P05）",
+      "kind": "ratio",
+      "num": "refund_order_count",
+      "den": "order_count",
+      "mul": 100,
+      "additivity": "ratio",
+      "unit": "%",
+      "decimals": 2,
+      "aliases": [
+        "退货率",
+        "订单退货率",
+        "退款单占比"
+      ]
+    }
+  ],
+  "dims": [
+    {
+      "id": "order_date",
+      "name": "日期",
+      "kind": "column",
+      "dataset": "orders",
+      "role": "日期",
+      "match": [
+        "日期",
+        "下单日期",
+        "date",
+        "order_date"
+      ]
+    },
+    {
+      "id": "store",
+      "name": "店铺",
+      "kind": "column",
+      "dataset": "orders",
+      "role": "店铺",
+      "match": [
+        "店铺ID",
+        "店铺",
+        "store_id",
+        "store"
+      ]
+    },
+    {
+      "id": "store_name",
+      "name": "店铺名",
+      "kind": "column",
+      "dataset": "stores",
+      "role": "店铺名",
+      "match": [
+        "店铺名称",
+        "店铺",
+        "store_name",
+        "store"
+      ]
+    },
+    {
+      "id": "refund_reason",
+      "name": "退款原因",
+      "kind": "column",
+      "dataset": "refunds",
+      "role": "退款原因",
+      "match": [
+        "退款原因",
+        "退款理由",
+        "reason"
+      ]
+    },
+    {
+      "id": "order_week",
+      "name": "周",
+      "kind": "timeBucket",
+      "dataset": "orders",
+      "role": "日期",
+      "match": [
+        "日期",
+        "下单日期",
+        "date"
+      ],
+      "grain": "week"
+    },
+    {
+      "id": "order_month",
+      "name": "月",
+      "kind": "timeBucket",
+      "dataset": "orders",
+      "role": "日期",
+      "match": [
+        "日期",
+        "下单日期",
+        "date"
+      ],
+      "grain": "month"
+    },
+    {
+      "id": "amount_tier",
+      "name": "订单金额分档",
+      "kind": "bucket",
+      "dataset": "orders",
+      "role": "销售金额",
+      "match": [
+        "销售额",
+        "GMV",
+        "amount"
+      ],
+      "edges": [
+        50,
+        100
+      ],
+      "labels": [
+        "小单",
+        "中单",
+        "大单"
+      ]
+    },
+    {
+      "id": "refund_date",
+      "name": "退款日期",
+      "kind": "column",
+      "dataset": "refunds",
+      "role": "日期",
+      "match": [
+        "退款日期",
+        "退款时间",
+        "refund_date",
+        "date"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "orders_refunds",
+      "left": "orders",
+      "right": "refunds",
+      "keys": [
+        "订单号",
+        "order_id"
+      ],
+      "cardinality": "1:N"
+    },
+    {
+      "id": "orders_stores",
+      "left": "orders",
+      "right": "stores",
+      "keys": [
+        "店铺ID",
+        "store_id"
+      ],
+      "cardinality": "N:1"
+    }
+  ]
+}

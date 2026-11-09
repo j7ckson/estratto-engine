@@ -1,0 +1,23 @@
+estratto-engine
+Copyright (c) 2026 Jackson Wu (j7ckson)
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This product includes software and model files developed by third parties:
+
+1. core/ -- the question-answering core (planning, validation, execution, answer rendering) is copied from the
+   DS Studio desktop application (candidate P80, same author), with the small modifications listed in DECISIONS.md.
+   Copyright (c) 2026 Jackson Wu (j7ckson), Apache-2.0.
+
+2. ONNX Runtime Web 1.22.0 (WebAssembly build; three files under core/worker/vendor/ort/, copied unmodified from the npm package
+   onnxruntime-web@1.22.0). License: MIT. Copyright (c) Microsoft Corporation. https://github.com/microsoft/onnxruntime
+   (see core/worker/vendor/ort/NOTICE.md)
+
+3. multilingual-e5-small (text embedding model, used for local value matching when vectors are enabled).
+   License: MIT. Copyright (c) the model authors (Wang et al., "Multilingual E5 Text Embeddings: A Technical Report", intfloat/multilingual-e5-small);
+   ONNX conversion by Xenova (Xenova/multilingual-e5-small). The model files are NOT included in the npm package; they are fetched
+   by the user (scripts/fetch-model.js) and remain under their own license.
+
+4. Runtime dependencies installed via npm (not bundled in this package, licenses as published by their authors):
+   @duckdb/node-api and DuckDB native bindings (MIT, DuckDB Foundation / DuckDB Labs), @js-temporal/polyfill (ISC),
+   exceljs (MIT).

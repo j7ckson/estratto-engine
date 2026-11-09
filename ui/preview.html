@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Estratto 组件预览</title>
+<style>
+  :root{color-scheme:light dark;--bg:#eef2f7;--t:#17202b;--m:#5b6776}
+  @media (prefers-color-scheme:dark){:root{--bg:#0b0f14;--t:#e8edf3;--m:#9aa6b5}}
+  body{margin:0;background:var(--bg);color:var(--t);font:15px/1.55 system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+  [hidden]{display:none!important}
+  main{max-width:860px;margin:0 auto;padding:16px}
+  h1{font-size:20px;margin:8px 0 4px} h2{font-size:16px;margin:28px 0 8px}
+  p.hint{color:var(--m);margin:4px 0;font-size:13.5px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px}
+  .chips button{font:inherit;font-size:13px;padding:5px 12px;border-radius:8px;border:1px solid #8a94a3;background:transparent;color:inherit;cursor:pointer}
+</style>
+</head>
+<body>
+<main>
+  <h1>Estratto 组件预览</h1>
+  <p class="hint">这是假数据,由 mock-server.mjs 提供。点下面的示例问题看各种答案状态。</p>
+  <h2>问数</h2>
+  <div class="chips" id="chips"></div>
+  <estratto-ask id="ask" endpoint="" token="demo-token"></estratto-ask>
+  <h2>问数(负责人视角)</h2>
+  <estratto-ask id="askowner" endpoint="" token="demo-token" owner-token="demo-owner"></estratto-ask>
+  <h2>设置(负责人)</h2>
+  <estratto-settings id="owner" endpoint="" token="demo-token" owner-token="demo-owner"></estratto-settings>
+  <h2>设置(只读)</h2>
+  <estratto-settings id="ro" endpoint="" token="demo-token"></estratto-settings>
+</main>
+<script src="/ui/estratto-ask.js"></script>
+<script src="/ui/estratto-settings.js"></script>
+<script>
+  const q = new URLSearchParams(location.search);
+  const ep = location.origin;
+  document.querySelectorAll('estratto-ask,estratto-settings').forEach(e => e.setAttribute('endpoint', ep));
+  if (q.get('lang')) document.querySelectorAll('estratto-ask,estratto-settings').forEach(e => e.setAttribute('lang', q.get('lang')));
+  if (q.get('only')) document.querySelectorAll('main > *').forEach(e => { if (!e.matches('h1') && e.id !== q.get('only') && !e.matches('script') && e.id !== 'chips') e.hidden = true; });
+  const ask = document.getElementById(q.get('who') === 'owner' ? 'askowner' : 'ask');
+  [['单个数字','上个月销售额是多少'],['表格','上个月各国家销售额'],['待确认','销售额怎么算'],['拒答','按客户邮箱统计'],['未核','现在库存多少'],['没数据','2019年有没有订单'],['确认口径(plan)','确认自动口径'],['花费上限','预算测试'],['出错','报错测试'],['很慢(可取消)','慢一点的问题']]
+    .forEach(([l,v]) => { const b = document.createElement('button'); b.textContent = l; b.onclick = () => ask.ask(v); chips.appendChild(b); });
+  ['estratto-answer','estratto-confirmed','estratto-error'].forEach(n => addEventListener(n, e => console.log(n, e.detail)));
+</script>
+</body>
+</html>
